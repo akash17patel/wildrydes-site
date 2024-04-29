@@ -70,6 +70,9 @@
     <div id="main">
         <div id="map">
         </div>
+
+        <!-- Container for weather information -->
+        <div id="weather-info"></div>
     </div>
 
     <div id="authTokenModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="authToken">
@@ -102,6 +105,37 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
             crossorigin=""></script>
+
+    <script>
+        // Function to fetch weather data
+        function fetchWeatherData(latitude, longitude) {
+            const apiKey = 'ce309f141e9b1936f8582d4859d46c70'; // Replace with your actual API key
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeatherInfo(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                });
+        }
+
+        // Function to display weather information
+        function displayWeatherInfo(weatherData) {
+            const weatherInfoContainer = document.getElementById('weather-info');
+            weatherInfoContainer.innerHTML = `
+                <h2>Current Weather</h2>
+                <p>Temperature: ${weatherData.main.temp} °C</p>
+                <p>Weather: ${weatherData.weather[0].description}</p>
+            `;
+        }
+
+        // Get the latitude and longitude of the map's center and fetch weather data
+        const mapCenter = { latitude: 51.5074, longitude: -0.1278 }; // Example coordinates for London
+        fetchWeatherData(mapCenter.latitude, mapCenter.longitude);
+    </script>
 </body>
 
 </html>
